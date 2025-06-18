@@ -16,7 +16,7 @@ public class IdleState : IPlayerState
     {
         if (player.GetMoveInput() != Vector2.zero)
         {
-            stateMachine.ChangeState(new WalkingState(player, stateMachine));
+            stateMachine.ChangeState(new WalkingState(player));
         }
     }
 

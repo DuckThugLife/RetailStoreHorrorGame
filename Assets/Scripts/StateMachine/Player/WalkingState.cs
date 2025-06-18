@@ -1,37 +1,40 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WalkingState : IPlayerState
 {
     private readonly PlayerController player;
-    private readonly PlayerStateMachine stateMachine;
+    private readonly Transform playerTransform;
+    private readonly InputAction moveInput;
+    private readonly float moveSpeed;
 
-    public WalkingState(PlayerController player, PlayerStateMachine stateMachine)
+    public WalkingState(PlayerController player)
     {
         this.player = player;
-        this.stateMachine = stateMachine;
+        this.playerTransform = player.transform;
+        this.moveInput = InputSystem.actions.FindAction("Move");
+        this.moveSpeed = player.moveSpeed;
+
+        if (moveInput == null)
+        {
+            Debug.LogError("Move action not found in InputSystem.actions");
+        }
     }
 
     public void Enter() { }
 
+    public void Exit() { }
+
     public void Update()
     {
-        Vector2 input = player.GetMoveInput();
-        if (input == Vector2.zero)
-        {
-            stateMachine.ChangeState(new IdleState(player, stateMachine));
-            return;
-        }
+        if (moveInput == null) return;
 
-        Vector3 move = new Vector3(input.x, 0, input.y);
-        player.transform.Translate(move * player.GetMoveSpeed() * Time.deltaTime, Space.World);
+        Vector2 input = moveInput.ReadValue<Vector2>();
+        Vector3 move = new Vector3(input.x, 0f, input.y);
 
-        // Optional: Rotate player to face direction
-        if (move != Vector3.zero)
+        if (move.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move);
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, Time.deltaTime * 10f);
+            playerTransform.Translate(move * moveSpeed * Time.deltaTime, Space.Self);
         }
     }
-
-    public void Exit() { }
 }

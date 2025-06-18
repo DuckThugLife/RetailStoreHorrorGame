@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] public float moveSpeed = 5f;
 
     private CharacterController characterController;
     private PlayerStateMachine stateMachine;
@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
-        stateMachine.ChangeState(new WalkingState(this, stateMachine));
+        stateMachine.ChangeState(new WalkingState(this));
     }
 
     void Update()
