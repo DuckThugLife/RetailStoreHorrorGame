@@ -1,9 +1,7 @@
-namespace StateMachine
+
+public interface IPlayerState
 {
-    public interface IPlayerState
-    {
         void Enter();
         void Update();
         void Exit();
-    }
 }
