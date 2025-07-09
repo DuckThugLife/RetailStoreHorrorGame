@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeState(IGameState newState)
     {
-        currentState?.Exit();
+        currentState?.Exit(); // Just to make sure we leave the last state when changing to the next one
         currentState = newState;
         currentState.Enter();
     }
