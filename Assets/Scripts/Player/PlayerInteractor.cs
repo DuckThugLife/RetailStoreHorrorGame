@@ -6,6 +6,9 @@ public class PlayerInteractor : MonoBehaviour
     [SerializeField] private float interactDistance = 3f;
     [SerializeField] private LayerMask interactLayer;
 
+    [SerializeField] private GameObject defaultCanvasCrosshair;
+    [SerializeField] private GameObject interactCanvasCrosshair;
+
     private IInteractables currentInteractable;
 
     void Update()
@@ -22,9 +25,9 @@ public class PlayerInteractor : MonoBehaviour
             {
                 if (currentInteractable != interactable)
                 {
-                    currentInteractable?.OnLoseFocus();
+                    currentInteractable?.OnLoseFocus(this);
                     currentInteractable = interactable;
-                    currentInteractable.OnFocus();
+                    currentInteractable.OnFocus(this);
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
@@ -37,9 +40,21 @@ public class PlayerInteractor : MonoBehaviour
         {
             if (currentInteractable != null)
             {
-                currentInteractable.OnLoseFocus();
+                currentInteractable.OnLoseFocus(this);
                 currentInteractable = null;
             }
         }
+    }
+
+    public void ShowDefaultCursor()
+    {
+        defaultCanvasCrosshair.SetActive(true);
+        interactCanvasCrosshair.SetActive(false);
+    }
+
+    public void ShowInteractCursor()
+    {
+        defaultCanvasCrosshair.SetActive(false);
+        interactCanvasCrosshair.SetActive(true);
     }
 }

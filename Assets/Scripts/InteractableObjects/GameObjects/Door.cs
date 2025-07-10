@@ -21,14 +21,16 @@ public class Door : MonoBehaviour, IInteractables
             Debug.LogWarning("Hinge Transform is not assigned!");
     }
 
-    public void OnFocus()
+    public void OnFocus(PlayerInteractor player)
     {
         Debug.Log("Door is highlighted or showing a prompt.");
+        player.ShowInteractCursor(); // Swap to interact crosshair
     }
 
-    public void OnLoseFocus()
+    public void OnLoseFocus(PlayerInteractor player)
     {
         Debug.Log("Stopped highlighting door.");
+        player.ShowDefaultCursor(); // Swap back to default
     }
 
     public void OnInteract()
