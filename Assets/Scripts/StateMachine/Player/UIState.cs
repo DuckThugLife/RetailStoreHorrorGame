@@ -1,4 +1,4 @@
-public class UIState : IGameState
+public class UIState : IPlayerState
 {
     private UIManager uiManager;
 
@@ -10,10 +10,17 @@ public class UIState : IGameState
     public void Enter()
     {
         uiManager.SetCursorState(true);
+        // Show menu or pause UI
     }
 
     public void Exit()
     {
         uiManager.SetCursorState(false);
+        // Hide menu or pause UI
+    }
+
+    public void Update()
+    {
+        // Optional: handle UI-specific input
     }
 }

@@ -1,8 +1,9 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerInteractor : MonoBehaviour
+public class PlayerInteractor : NetworkBehaviour
 {
-    [SerializeField] private Transform raycastFromObject;   
+    [SerializeField] private Transform raycastFromObject;
     [SerializeField] private float interactDistance = 3f;
     [SerializeField] private LayerMask interactLayer;
 
@@ -13,9 +14,12 @@ public class PlayerInteractor : MonoBehaviour
 
     void Update()
     {
-        Ray ray = new Ray(raycastFromObject.transform.position, raycastFromObject.transform.forward);
+        //  Skip if not this player's local client
+        if (!IsOwner) return;
+
+        Ray ray = new Ray(raycastFromObject.position, raycastFromObject.forward);
         RaycastHit hit;
-        Debug.DrawRay(raycastFromObject.transform.position, raycastFromObject.transform.forward * interactDistance, Color.green);
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.green);
 
         if (Physics.Raycast(ray, out hit, interactDistance, interactLayer))
         {
