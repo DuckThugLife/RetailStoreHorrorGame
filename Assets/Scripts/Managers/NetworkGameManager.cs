@@ -18,6 +18,7 @@ public class NetworkGameManager : MonoBehaviour
     [SerializeField] TMP_Text statusText;
     [SerializeField] Button hostBtn, joinBtn;
 
+
     [SerializeField] private int maxPlayers;
 
     async void Start()

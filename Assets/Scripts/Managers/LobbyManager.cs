@@ -9,7 +9,6 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private NetworkGameManager networkGameManager;
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameObject lobbyUI;
-    [SerializeField] private bool autoHostOnStart = true;
 
     private bool isLobbyMenuOpen = false;
 
@@ -25,49 +24,15 @@ public class LobbyManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
     private void Start()
     {
-        if (autoHostOnStart)
-        {
-            HideAllUI();
-            ShowMainMenu(); // Or hide UI here if you want
-        }
-        else
-        {
-            ShowMainMenu();
-        }
-    }
-
-    private IEnumerator DelayedHostStart()
-    {
-        yield return new WaitForSeconds(0.5f);
-        networkGameManager.HostGame();
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Lobby")
-        {
-            StartCoroutine(DelayedHostStart());
-        }
+        ShowMainMenu();
     }
 
     private IEnumerator WaitForLocalPlayerAndSetState(IPlayerState state)
     {
         while (PlayerController.LocalPlayer == null)
-        {
             yield return null;
-        }
 
         PlayerController.LocalPlayer.StateMachine.ChangeState(state);
     }
@@ -111,7 +76,6 @@ public class LobbyManager : MonoBehaviour
 
     public void StartSoloLobby()
     {
-        Debug.Log("Auto-hosting lobby for solo play...");
         networkGameManager.HostGame();
         ShowLobby();
     }
