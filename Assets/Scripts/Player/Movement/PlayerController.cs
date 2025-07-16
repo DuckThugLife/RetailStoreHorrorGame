@@ -1,35 +1,34 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
-    [SerializeField] public float moveSpeed = 5f;
+    [field: SerializeField] public float MoveSpeed { get; private set; }
 
-    private CharacterController characterController;
+    public CharacterController Controller { get; private set; }
+    public Vector2 MoveInput { get; private set; }
+
     private PlayerStateMachine stateMachine;
-
     private InputAction moveAction;
-    private Vector2 moveInput;
 
-    void Awake()
+    private void Awake()
     {
-        characterController = GetComponent<CharacterController>();
+        Controller = GetComponent<CharacterController>();
         stateMachine = new PlayerStateMachine();
     }
 
-    void Start()
+    private void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
         stateMachine.ChangeState(new WalkingState(this));
     }
 
-    void Update()
+    private void Update()
     {
-        moveInput = moveAction.ReadValue<Vector2>();
+        if (!IsOwner) return;  //  Prevent input/movement for non-local players
+
+        MoveInput = moveAction.ReadValue<Vector2>();
         stateMachine.Update();
     }
-
-    public Vector2 GetMoveInput() => moveInput;
-    public float GetMoveSpeed() => moveSpeed;
-    public CharacterController GetController() => characterController;
 }

@@ -13,7 +13,7 @@ public class WalkingState : IPlayerState
         this.player = player;
         this.playerTransform = player.transform;
         this.moveInput = InputSystem.actions.FindAction("Move");
-        this.moveSpeed = player.moveSpeed;
+        this.moveSpeed = player.MoveSpeed;
 
         if (moveInput == null)
         {
@@ -34,10 +34,11 @@ public class WalkingState : IPlayerState
 
         if (move.sqrMagnitude > 0.01f)
         {
+
             // Move relative to the player’s forward
             move = playerTransform.TransformDirection(move);
 
-            player.GetController().Move(move * moveSpeed * Time.deltaTime);
+            player.Controller.Move(move * moveSpeed * Time.deltaTime);
         }
     }
 
