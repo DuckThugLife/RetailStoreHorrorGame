@@ -13,4 +13,9 @@ public class PlayerStateMachine
     {
         currentState?.Update();
     }
+
+    public IPlayerState GetCurrentState()
+    {
+        return currentState;
+    }
 }

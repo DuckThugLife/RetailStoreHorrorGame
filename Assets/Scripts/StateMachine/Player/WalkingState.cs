@@ -31,7 +31,7 @@ public class WalkingState : IPlayerState
 
         Vector2 input = moveInput.ReadValue<Vector2>();
         Vector3 move = new Vector3(input.x, 0f, input.y);
-
+       
         if (move.sqrMagnitude > 0.01f)
         {
 

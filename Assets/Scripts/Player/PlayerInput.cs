@@ -1,26 +1,26 @@
+using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerInput : NetworkBehaviour
 {
-    private PlayerStateMachine stateMachine;
+    private PlayerController playerController;
 
     private void Awake()
     {
-        stateMachine = new PlayerStateMachine();
+        playerController = GetComponent<PlayerController>();
+        if (playerController == null)
+            Debug.LogError("PlayerController not found on the same GameObject!");
     }
 
     private void Update()
     {
-        if (!IsOwner) return; // Prevent input if not local player
+        if (!IsOwner) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("Player pressed Escape!");
-            stateMachine.ChangeState(new UIState(UIManager.Instance));
+            playerController.StateMachine.ChangeState(new UIState(UIManager.Instance));
         }
-
-        // Pass update through to the current state
-        stateMachine.Update();
     }
 }

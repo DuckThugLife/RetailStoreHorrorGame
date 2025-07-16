@@ -1,15 +1,15 @@
 using UnityEngine;
-public class GameState : IGameState
+public class LobbyState : IGameState
 {
     public void Enter()
     {
         UIManager.Instance?.SetCursorState(false);
-        Debug.Log("Entered Game State");
+        Debug.Log("Entered Lobby State");
     }
 
     public void Exit()
     {
        
-        Debug.Log("Exited Game State");
+        Debug.Log("Exited Lobby State");
     }
 }

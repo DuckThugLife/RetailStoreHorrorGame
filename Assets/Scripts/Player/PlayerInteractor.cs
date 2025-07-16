@@ -12,10 +12,13 @@ public class PlayerInteractor : NetworkBehaviour
 
     private IInteractables currentInteractable;
 
+
+
     void Update()
     {
-        //  Skip if not this player's local client
-        if (!IsOwner) return;
+        // Skip if this is not the local player's PlayerInteractor
+        if (PlayerController.LocalPlayer == null || PlayerController.LocalPlayer.gameObject != gameObject)
+            return;
 
         Ray ray = new Ray(raycastFromObject.position, raycastFromObject.forward);
         RaycastHit hit;

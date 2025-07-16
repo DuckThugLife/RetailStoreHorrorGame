@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ChangeState(new GameState()); // Default to menu at start
+        ChangeState(new LobbyState()); // Default to menu at start
     }
 
     public void ChangeState(IGameState newState)

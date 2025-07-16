@@ -25,6 +25,7 @@ public class NetworkGameManager : MonoBehaviour
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         statusText.text = $"Signed in: {AuthenticationService.Instance.PlayerId}";
+
     }
 
     public async void HostGame()
@@ -35,7 +36,7 @@ public class NetworkGameManager : MonoBehaviour
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(alloc.AllocationId);
 
             var lobby = await LobbyService.Instance.CreateLobbyAsync(
-                "HorrorLobby", 4, new CreateLobbyOptions
+                "Lobby", 4, new CreateLobbyOptions
                 {
                     Data = new System.Collections.Generic.Dictionary<string, DataObject>
                     {
