@@ -34,7 +34,11 @@ public class WalkingState : IPlayerState
 
         if (move.sqrMagnitude > 0.01f)
         {
-            playerTransform.Translate(move * moveSpeed * Time.deltaTime, Space.Self);
+            // Move relative to the player’s forward
+            move = playerTransform.TransformDirection(move);
+
+            player.GetController().Move(move * moveSpeed * Time.deltaTime);
         }
     }
+
 }
