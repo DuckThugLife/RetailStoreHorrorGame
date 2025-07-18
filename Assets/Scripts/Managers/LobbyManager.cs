@@ -97,13 +97,13 @@ public class LobbyManager : MonoBehaviour
     public void HostLobby()
     {
         networkGameManager.HostGame();
-        ShowLobby();
+        CloseLobbyMenu();  // Close UI
     }
 
     public void JoinLobby()
     {
         networkGameManager.JoinGame();
-        ShowLobby();
+        CloseLobbyMenu();  // Close UI
     }
 
     public void QuitGame()
