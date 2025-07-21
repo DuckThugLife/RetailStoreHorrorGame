@@ -12,12 +12,15 @@ public class PlayerInteractor : NetworkBehaviour
 
     private IInteractables currentInteractable;
 
-
+    private bool IsInOfflineMode =>
+        NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening;
 
     void Update()
     {
-        // Skip if this is not the local player's PlayerInteractor
-        if (PlayerController.LocalPlayer == null || PlayerController.LocalPlayer.gameObject != gameObject)
+        // Only process input if:
+        // 1. We're offline (single-player), or
+        // 2. We're the network owner of this player object
+        if (!(IsInOfflineMode || IsOwner))
             return;
 
         Ray ray = new Ray(raycastFromObject.position, raycastFromObject.forward);

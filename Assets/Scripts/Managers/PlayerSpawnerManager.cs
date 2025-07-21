@@ -3,15 +3,26 @@ using UnityEngine;
 
 public class PlayerSpawnerManager : MonoBehaviour
 {
+    public static PlayerSpawnerManager Instance { get; private set; }
+
     [SerializeField] private GameObject playerPrefab;
 
-    private bool subscribed = false;
+    private GameObject offlinePlayerInstance;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
         if (IsInOfflineMode)
         {
-            // Offline: just spawn local player immediately
             SpawnLocalPlayer();
         }
         else
@@ -19,20 +30,14 @@ public class PlayerSpawnerManager : MonoBehaviour
             if (NetworkManager.Singleton != null)
             {
                 NetworkManager.Singleton.OnServerStarted += OnServerStarted;
-
-                if (NetworkManager.Singleton.IsServer)
-                    SubscribeToClientConnect();
             }
         }
     }
 
     private void OnDestroy()
     {
-        if (NetworkManager.Singleton != null)
-        {
-            NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
-            UnsubscribeFromClientConnect();
-        }
+        if (Instance == this)
+            Instance = null;
     }
 
     private bool IsInOfflineMode =>
@@ -45,57 +50,38 @@ public class PlayerSpawnerManager : MonoBehaviour
 
     private void SubscribeToClientConnect()
     {
-        if (!subscribed)
+        if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            subscribed = true;
-            Debug.Log("Subscribed to OnClientConnectedCallback");
-        }
-    }
-
-    private void UnsubscribeFromClientConnect()
-    {
-        if (subscribed)
-        {
-            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-            subscribed = false;
-            Debug.Log("Unsubscribed from OnClientConnectedCallback");
         }
     }
 
     private void OnClientConnected(ulong clientId)
     {
-        Debug.Log($"Client connected: {clientId}");
-        SpawnPlayer(clientId);
+        if (NetworkManager.Singleton.IsServer)
+            SpawnPlayer(clientId);
     }
 
     private void SpawnPlayer(ulong clientId)
     {
-        if (!NetworkManager.Singleton.IsServer)
-        {
-            Debug.LogWarning("SpawnPlayer called on non-server!");
-            return;
-        }
-
         var playerInstance = Instantiate(playerPrefab);
         var networkObject = playerInstance.GetComponent<NetworkObject>();
-
-        if (networkObject == null)
-        {
-            Debug.LogError("Player prefab missing NetworkObject component!");
-            return;
-        }
-
         networkObject.SpawnAsPlayerObject(clientId, true);
-        Debug.Log($"Spawned player for client {clientId}");
     }
 
     private void SpawnLocalPlayer()
     {
-        // Offline mode: just instantiate player and set local static ref
-        var playerInstance = Instantiate(playerPrefab);
-        var playerController = playerInstance.GetComponent<PlayerController>();
-       
-        Debug.Log("Spawned local player for offline mode");
+        offlinePlayerInstance = Instantiate(playerPrefab);
+        Debug.Log("Spawned offline-mode player");
+    }
+
+    public void CleanupOfflinePlayer()
+    {
+        if (offlinePlayerInstance != null)
+        {
+            Destroy(offlinePlayerInstance);
+            offlinePlayerInstance = null;
+            Debug.Log("Destroyed offline-mode player manually.");
+        }
     }
 }

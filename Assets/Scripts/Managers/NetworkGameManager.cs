@@ -47,12 +47,25 @@ public class NetworkGameManager : MonoBehaviour
             );
 
             SetupRelay(AllocationUtils.ToRelayServerData(alloc, "dtls"));
-            NetworkManager.Singleton.StartHost();
-            statusText.text = "Hosting | Code: " + joinCode;
+
+            bool success = NetworkManager.Singleton.StartHost();
+
+            if (success)
+            {
+                PlayerSpawnerManager.Instance?.CleanupOfflinePlayer();  //  Safe cleanup after hosting started
+                statusText.text = "Hosting | Code: " + joinCode;
+                Debug.Log("Host started successfully, cleaned up offline player.");
+            }
+            else
+            {
+                statusText.text = "Host failed: StartHost() returned false.";
+                Debug.LogError("StartHost() failed. Offline player not cleaned up.");
+            }
         }
         catch (System.Exception e)
         {
             statusText.text = "Host failed: " + e.Message;
+            Debug.LogError("Host failed: " + e.Message);
         }
     }
 

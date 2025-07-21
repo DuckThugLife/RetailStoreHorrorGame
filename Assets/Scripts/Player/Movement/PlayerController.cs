@@ -24,6 +24,23 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkDespawn()
+    {
+        if (IsOwner && LocalPlayer == this)
+        {
+            LocalPlayer = null;
+        }
+        base.OnNetworkDespawn();
+    }
+
+    private new void OnDestroy()
+    {
+        if (LocalPlayer == this)
+        {
+            LocalPlayer = null;
+        }
+    }
+
     private InputAction moveAction;
 
     private void Awake()
