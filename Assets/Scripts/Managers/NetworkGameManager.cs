@@ -31,6 +31,13 @@ public class NetworkGameManager : MonoBehaviour
 
     public async void HostGame()
     {
+        // Prevent hosting if already hosting or joined as a client
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient)
+        {
+            Debug.LogWarning("Tried to host again, but already running a session.");
+            return;
+        }
+
         try
         {
             var alloc = await RelayService.Instance.CreateAllocationAsync(maxPlayers);
