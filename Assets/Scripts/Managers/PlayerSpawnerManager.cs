@@ -67,6 +67,7 @@ public class PlayerSpawnerManager : MonoBehaviour
         var playerInstance = Instantiate(playerPrefab);
         var networkObject = playerInstance.GetComponent<NetworkObject>();
         networkObject.SpawnAsPlayerObject(clientId, true);
+        
     }
 
     private void SpawnLocalPlayer()

@@ -29,6 +29,6 @@ public class JoinMenu : MonoBehaviour, IInteractables
 
     public string GetInteractionPrompt()
     {
-        return "Press E to interact";
+        return "Press E To Open Join Menu";
     }
 }

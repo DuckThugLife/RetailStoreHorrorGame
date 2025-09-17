@@ -9,6 +9,8 @@ public class PlayerController : NetworkBehaviour
     public PlayerStateMachine StateMachine { get; private set; }
     public CharacterController Controller { get; private set; }
 
+    public IMenuHandler MenuObjectHandler { get; private set; }
+
     [Header("Player Movement")]
     [field: SerializeField] public float MoveSpeed { get; private set; }
     public Vector2 MoveInput { get; private set; }
@@ -62,11 +64,17 @@ public class PlayerController : NetworkBehaviour
         Debug.Log($"Changing player state to: - {StateMachine.GetCurrentState()}");
     }
 
+    public void UpdateMenuHandler(IMenuHandler menu)
+    { 
+        MenuObjectHandler = menu;
+    }
+
+
     private void Update()
     {
         // Allow movement if we're in offline mode OR we own the networked object
         if (!(IsInOfflineMode || IsOwner)) return;
-
+        
         MoveInput = moveAction.ReadValue<Vector2>();
         StateMachine.Update();
     }
