@@ -73,8 +73,9 @@ public class PlayerController : NetworkBehaviour
     private void Update()
     {
         // Allow movement if we're in offline mode OR we own the networked object
-        if (!(IsInOfflineMode || IsOwner)) return;
-        
+        if (!IsInOfflineMode && !IsOwner)
+             return;
+
         MoveInput = moveAction.ReadValue<Vector2>();
         StateMachine.Update();
     }
